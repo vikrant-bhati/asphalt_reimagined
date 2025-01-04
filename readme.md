@@ -56,4 +56,4 @@ cd cv_project
 python play.py
 ```
 ## 📸 Live Demo
-[![Watch the Demo Video](./media/game-teaser.png)](https://youtu.be/jf9etWVmbEA?si=i6ByldbLPhPqaSQD)
+[![Watch the Demo Video](./media/images/game-teaser.png)](https://youtu.be/jf9etWVmbEA?si=i6ByldbLPhPqaSQD)
