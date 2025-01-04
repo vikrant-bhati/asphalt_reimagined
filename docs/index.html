@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Computer Vision Course Project | Gesture Recognition</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+         body {
+         padding-top: 60px;
+         }
+         .vis {
+         color: #3366CC;
+         }
+         .data {
+         color: #FF9900;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <div class="page-header text-center">
+            <h1>Gesture Recognition: Play Game using Hand Gestures</h1>
+            <span style="font-size: 20px;"><strong>Vikrant Bhati, Kamal Sherawat</strong></span><br>
+            <span style="font-size: 18px;">Fall 2024 ECE 4554/5554 Computer Vision: Course Project</span><br>
+            <span style="font-size: 18px;">Virginia Tech</span>
+            <hr>
+         </div>
+         <h3 class="text-center">Abstract</h3>
+         <p>
+            We aimed to develop a project that showcases the integration of Computer Vision in human-computer interaction to play games where users control gameplay through hand gestures. We sought the Asphalt8 racing game with four controls - turn left, turn right, brake, and nitro boost, to ensure accurate gesture recognition and minimize errors. This choice was ideal as it allows users to play using their index finger and palm while demonstrating the effectiveness of Computer Vision in creating accessible, real-time interactive applications.  
+         </p>
+         <br>
+         <h3 class="text-center">Asphalt Reimagined: Gesture Control Edition</h3>
+         <div class="text-center">
+            <img src="./images/game-teaser.png" alt="game-teaser" style="height: 300px;">
+            <p><em>Figure 1: Demonstrating vehicle controls in Asphalt 8 using hand gestures for gameplay.</em></p>
+         </div>
+         <br>
+         <h3 class="text-center">Introduction</h3>
+         <p>With the continuous advancements in technology, the demand for more immersive and intuitive human-computer interaction methods has significantly increased. Traditional input devices such as keyboards, mice, and controllers have dominated gaming platforms for decades. However, with the advancement of computer vision and object detection libraries such as Mediapipe, we can present a novel way to bridge the gap between physical gestures and digital interactions, providing a more engaging and natural user experience. As shown in Figure 1, we use hand-based gesture controls to manage game functionalities in this project, leveraging techniques in real-time computer vision and machine learning.
+         </p>
+         <p>
+            The motivation behind this project stems from the desire to leverage computer vision applications in day-to-day tasks such as gaming experiences that are more interactive and accessible to a broader audience. Traditional controllers can be limiting for individuals with physical constraints, and the repetitive usage of such devices can lead to fatigue or strain. By introducing gesture-based controls, players can interact with the game environment more intuitively and dynamically, enhancing the overall user experience. Furthermore, the rise of augmented reality (AR) and virtual reality (VR) applications has highlighted the need for non-contact interaction methods. Gesture-based controls offer the potential to replace or complement existing input devices in such environments, enabling a seamless transition from traditional setups to futuristic gaming experiences. For our project, we read the video stream using the cv2 library, fed the data to the media pipe library to map hand landmarks, and then controlled the game inputs using these handmarks.
+         </p>
+         <h5>Applications</h5>
+         <p>
+            The implementation of gesture-based controls has applications beyond gaming, including:
+         <ul>
+            <li><strong>Rehabilitation and Therapy: </strong>Encouraging motor skills recovery through interactive and engaging exercises.</li>
+            <li><strong>AR/VR Interfaces: </strong>Allowing natural interaction in virtual environments without the need for physical controllers.</li>
+            <li><strong>Smart Home Automation: </strong>Controlling devices through intuitive gestures.</li>
+            <li><strong>Robotics and Drone Control: </strong>Enabling precise manipulation without requiring specialized hardware.</li>
+         </ul>
+         </p>
+         <div class="container mt-4">
+            <div class="row">
+               <!-- Existing Approaches Section -->
+               <div class="col-md-6 p-4" style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; margin-bottom: 20px;">
+                  <h5 class="text-center">Existing Approaches</h5>
+                  <p>
+                     Gesture-based interaction has traditionally relied on specialized hardware such as motion sensors, depth cameras, or wearable devices. Some of the notable methods include:
+                  </p>
+                  <ul>
+                     <li><strong>Glove-based Systems:</strong> Using sensor-equipped gloves to capture hand movements.</li>
+                     <li><strong>Depth-sensing Cameras:</strong> Leveraging devices like Microsoft Kinect to detect depth and motion.</li>
+                     <li><strong>Traditional Machine Learning:</strong> Employing handcrafted features and classifiers to interpret gestures.</li>
+                  </ul>
+                  <p>
+                     While effective, these approaches often come with drawbacks such as high cost, limited portability, and complex setup.
+                  </p>
+               </div>
+               <!-- How Our Approach Is New Section -->
+               <div class="col-md-6 p-4" style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; margin-bottom: 20px;">
+                  <h5 class="text-center">How Our Approach Is New</h5>
+                  <p>
+                     This project introduces a <strong>camera-only gesture recognition system</strong> that utilizes the <strong>MediaPipe framework</strong> for accurate and efficient hand landmark detection. Unlike traditional approaches, it eliminates the need for additional hardware, relying solely on a standard webcam and advanced machine learning algorithms.
+                  </p>
+                  <p>Our solution is:</p>
+                  <ul>
+                     <li><strong>Cost-effective:</strong> No need for specialized equipment.</li>
+                     <li><strong>Scalable:</strong> Can be easily integrated into any camera-enabled device.</li>
+                     <li><strong>Accessible:</strong> Usable by anyone with minimal setup requirements.</li>
+                  </ul>
+                  <p>
+                     By using hand gestures as the primary mode of interaction, this approach redefines how players engage with digital environments, setting the stage for the next generation of intuitive and immersive games.
+                  </p>
+               </div>
+            </div>
+         </div>
+         <center>
+            <h3>Approach</h3>
+         </center>
+         <p>
+            The project aims to create a gesture-based game control system using hand landmarks. For this, we captured live video from a webcam using the cv2 library, detected hand landmarks in real-time using Google’s MediaPipe Hand Landmarker, and translated these gestures into game control commands (e.g., steering and accelerating) using pynput. 
+         </p>
+         <div class="text-center">
+            <img src="./images/flowchart.png" alt="Flowchart" style="height: 300px;">
+            <p><em>Figure 2: Overall Approach of project.</em></p>
+         </div>
+         <ul>
+            <li><strong>Video Capture:</strong> </li>
+            <ul>
+               <li>Used the OpenCV library to capture live video from the webcam.</li>
+               <li> Implemented the CaptureVideo class to manage video streams, ensuring smooth frame capture and a mirror effect for intuitive user interactions.</li>
+            </ul>
+            <li><strong>Hand Landmark Detection:</strong> </li>
+            <ul>
+               <li> Video stream captured utilises MediaPipe's Hand Landmarker to detect hand postions.</li>
+               <li> Created the CaptureHandLandmarks class to process frames, detect hand positions, and visualize landmarks on the video stream.</li>
+               <div class="text-center">
+                  <img src="./images/hand-landmark.png" alt="Game Teaser" style="height: 300px;">
+                  <p><em>Figure 3: Keypoint localization of hand landmark model.</em></p>
+               </div>
+            </ul>
+            <li><strong>Game Controls:</strong> </li>
+            <ul>
+               <li>
+                  Developed the GameController class to map hand gestures to game controls. 
+               </li>
+               Specifically:
+               <ul>
+                  <li> <strong>Steering: </strong>The horizontal position of the right hand's index finger was used to determine left or right movement.</li>
+                  <div class="container mt-4">
+                     <div class="row text-center">
+                        <!-- Figure 3a -->
+                        <div class="col-md-6">
+                           <img src="./images/lefthand-landarks.png" alt="lefthand-landarks" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                           <p><em>Figure 4a: Left Steering using hand movement.</em></p>
+                        </div>
+                        <!-- Figure 3b -->
+                        <div class="col-md-6">
+                           <img src="./images/righthand-landarks.png" alt="righthand-landarks" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                           <p><em>Figure 4b: Right Steering using hand movement.</em></p>
+                        </div>
+                     </div>
+                  </div>
+                  <li> <strong>Acceleration and Braking: </strong>Used the vertical position of the left hand's palm to simulate acceleration or braking.</li>
+                  <div class="container mt-4">
+                     <div class="row text-center">
+                        <div class="col-md-6">
+                           <img  src="./images/plam-open.png" alt="plam-open" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                           <p><em>Figure 5a: Nitro Boost using open plam.</em></p>
+                        </div>
+                        <div class="col-md-6">
+                           <img src="./images/plam-closed.png" alt="plam-closed" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                           <p><em>Figure 5b: Braking using closed palm.</em></p>
+                        </div>
+                     </div>
+                  </div>
+               </ul>
+               <li>
+                  Integrated pynput for keyboard simulation, ensuring compatibility with most games.
+               </li>
+            </ul>
+            <li><strong>Integration: </strong> </li>
+            <ul>
+              <li>Updated the game controls to use keyboard inputs that are configured using pynputs:
+                <ul>
+                  <li>
+                    w : Nitro Boost
+                  </li>
+                  <li>
+                    s : Break
+                  </li>
+                  <li>
+                    a : Left Turn
+                  </li>
+                  <li>
+                    d : Right Turn
+                  </li>
+                </ul></li>
+               <li>Combined all components in the main script to continuously process video frames, detect hand gestures, and send corresponding keyboard inputs to control the game.
+               </li>
+            </ul>
+            <pre style="background-color: #f8f9fa; border-radius: 5px;">
+  <code>
+        def controller(self, hand_landmarks, mp_hands, frame):
+        for idx, hand_landmark in enumerate(hand_landmarks.multi_hand_landmarks):
+            if hand_landmarks.multi_handedness:
+                hand_label = hand_landmarks.multi_handedness[idx].classification[0].label
+                if hand_label == "Right":
+                    index_tip = hand_landmark.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                    index_base = hand_landmark.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP]
+                    x, y = int(index_tip.x * frame.shape[1]), int(index_tip.y * frame.shape[0])
+                    prev_x, prev_y = int(index_base.x * frame.shape[1]), int(index_base.y * frame.shape[0])
+                    self.steer(x,y, prev_x, prev_y)
+                else:
+                    index_tip = hand_landmark.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                    index_base = hand_landmark.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP]
+                    x, y = int(index_tip.x * frame.shape[1]), int(index_tip.y * frame.shape[0])
+                    prev_x, prev_y = int(index_base.x * frame.shape[1]), int(index_base.y * frame.shape[0])
+                    self.accelarator(prev_y,y) 
+            else:
+                index_tip = hand_landmark.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                index_base = hand_landmark.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP]
+                x, y = int(index_tip.x * frame.shape[1]), int(index_tip.y * frame.shape[0])
+                prev_x, prev_y = int(index_base.x * frame.shape[1]), int(index_base.y * frame.shape[0])
+                self.steer(x,y, prev_x, prev_y)
+  </code>
+</pre>
+            <p ><em>Code: Determine steering and acceleration based on right hand's index finger and left-hand palm.</em></p>
+         </ul>
+         <p>
+         <h5>Code Sources</h5>
+         <ul>
+            <li><strong>MediaPipe Hand Landmarker: </strong>Documentation and example code for the MediaPipe Hand Landmarker were obtained from the official <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker">Google AI repository.</a> </li>
+            <li><strong>Asphalt8 Airborne: </strong>Selected the Asphalt8 to as the game to play from <a href="https://apps.apple.com/in/app/asphalt-8-airborne/id610391947"> the app store.</a></li>
+         </ul>
+         </ul>
+         </p>
+         <p>
+         <h5>Challenges Faced and Solutions</h5>
+         <ul>
+            <li><strong>Managing Real-Time Performance</strong></li>
+            <ul>
+               <strong>Issue: </strong>Processing video frames in real-time caused occasional delays or dropped frames.
+               <br>
+               <strong>Solution: </strong>Optimized the frame size to 640x640 and ensured efficient use of MediaPipe's processing pipeline by limiting the detection to two hands.
+            </ul>
+            <li><strong>Error Handling for Missing Hands</strong></li>
+            <ul>
+               <strong>Issue: </strong>The user prompts only one hand instead of two hands.
+               <br>
+               <strong>Solution: </strong>If multiple hands are not detected, we will consider that hand for steering, irrespective of whether it's the right hand or the left hand.
+            </ul>
+            <li><strong>Gesture Recognition Consistency</strong></li>
+            <ul>
+               <strong>Issue: </strong>Small hand movements sometimes triggered unintended game controls.
+               <br>
+               <strong>Solution: </strong>Updated the threshold from 0.5 to 0.6 thresholds for steering and acceleration to ignore minor movements that might lead to erratic behavior. In addition to this, a horizontal threshold of 15 pixels was used to detect the finger movement for steering.
+            </ul>
+            </p>
+         </ul>
+         <center>
+            <h3>Experiments and results</h3>
+         </center>
+         <p>
+         </p>
+         While working on the project, we realized that the project's success relies on the accuracy of our hand detection and the latency of the system we are using. Below are the experiments and observations that we made to make this project work:
+         <ul>
+            <li>
+               <strong>Select 15 pixels as threshold to detect hand movements: </strong>
+               <ul>
+                  <li>
+                     <strong>Horizontal Movements: </strong>
+                     <p>
+                        We used different thresholds to balance the false positive finger movements for horizontal shift and the actually intended movements. Below are the results of gesture counts with horizontal shifts for 10px, 15px, and 25px.
+                     <div style="text-align: center;">
+                        <img src="./images/horizontal-shift.png" alt="horizontal-shift" style="height: 300px;">
+                        <p><em>Figure 6a: Graph showcasing gesture counts vs latency for horizontal thresholds.</em></p>
+                     </div>
+                     </p>
+                  </li>
+                  <li><strong> Palm to Control Acceleration: </strong></li>
+                  <p>
+                     We used the INDEX_FINGER_TIP and INDEX_FINGER_MCP values to determine whether the palm is open for nitro boost or closed for brake, as this gives the largest and most consistent separation. We also tried other combinations to determine whether palm is open or closed, such as MIDDLE_FINGER_TIP and MIDDLE_FINGER_MCP and RING_FINGER_TIP and RING_FINGER_MCP, but INDEX_FINGER_TIP and INDEX_FINGER_MCP gave better gesture counts.
+                  <div style="text-align: center;">
+                     <img src="./images/vertical-shift.png" alt="vertical-shift" style="height: 300px;">
+                     <p><em>Figure 6b: Comparing Different Finger Landmarks for Open/Closed Palm Detection.</em></p>
+                  </div>
+               </ul>
+               </p>
+            </li>
+            <li><strong>Selection confidence parameters for hand detection model: </strong></li>
+            <ul>
+               <li>
+                  <strong>min_detection_confidence = 0.6</strong>
+                  <p>This parameter sets the minimum confidence threshold for detecting a hand in a frame and filters out false positives. At min_detection_confidence = 0.6, the system achieves a 98% detection rate in good lighting and maintains robustness in challenging conditions like low light and cluttered backgrounds. </p>
+               </li>
+               <li><strong>min_tracking_confidence =0.6</strong></li>
+               <p>
+                  This parameter sets the minimum confidence threshold for tracking hand landmarks between frames and ensures stable and accurate tracking of hand landmarks once a hand has been detected while controlling whether the system continues tracking the hand or requires a re-detection. At min_tracking_confidence = 0.6, the landmarks are consistent across frames, avoiding jittery or unstable tracking.
+               </p>
+            </ul>
+            Below are the tables to showcase the results for three different values of min_detection_confidence and min_tracking_confidence at 0.2, 0.5(default), and 0.6, with the differences in lighting and background.
+            <div style="margin-bottom: 20px; padding: 10px; border-radius: 5px;">
+               <!-- Table 1 -->
+               <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                  <thead>
+                     <tr style="background-color: #f2f2f2;">
+                        <th style="border: 1px solid #ccc; padding: 8px;">Metric</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Good Lighting</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Low Lighting</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Cluttered Background</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Detection Rate (%)</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">85</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">60</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">50</td>
+                     </tr>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">False Positives (%)</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">15</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">30</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">40</td>
+                     </tr>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Stability</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Poor</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Poor</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Very Poor</td>
+                     </tr>
+                  </tbody>
+               </table>
+               <p style="text-align: center; font-style: italic; margin-top: 5px; margin-bottom: 15px;">
+                  Table 7a: Parameter Configuration: min_detection_confidence = 0.2, min_tracking_confidence = 0.2
+               </p>
+               <!-- Table 2 -->
+               <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                  <thead>
+                     <tr style="background-color: #f2f2f2;">
+                        <th style="border: 1px solid #ccc; padding: 8px;">Metric</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Good Lighting</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Low Lighting</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Cluttered Background</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Detection Rate (%)</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">95</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">75</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">65</td>
+                     </tr>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">False Positives (%)</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">8</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">15</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">20</td>
+                     </tr>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Stability</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Moderate</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Moderate</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Moderate</td>
+                     </tr>
+                  </tbody>
+               </table>
+               <p style="text-align: center; font-style: italic; margin-top: 5px; margin-bottom: 15px;">
+                  Table 7b: Parameter Configuration: min_detection_confidence = 0.5, min_tracking_confidence = 0.5
+               </p>
+               <!-- Table 3 -->
+               <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                  <thead>
+                     <tr style="background-color: #f2f2f2;">
+                        <th style="border: 1px solid #ccc; padding: 8px;">Metric</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Good Lighting</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Low Lighting</th>
+                        <th style="border: 1px solid #ccc; padding: 8px;">Cluttered Background</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Detection Rate (%)</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">98</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">85</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">80</td>
+                     </tr>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">False Positives (%)</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">5</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">8</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">10</td>
+                     </tr>
+                     <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px;">Stability</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">High</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">High</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">High</td>
+                     </tr>
+                  </tbody>
+               </table>
+               <p style="text-align: center; font-style: italic; margin-top: 5px;">
+                  Table 7c: Parameter Configuration: min_detection_confidence = 0.6, min_tracking_confidence = 0.6
+               </p>
+            </div>
+         </ul>
+         <center>
+           <h3>Qualitative results</h3>
+         </center>
+         <h5>Success Cases: </h5>
+         <p>This example showcases a successful scenario. In the picture, a user can be seen with the right-hand finger tilted to the left and the left-hand palm opening, and correspondingly, the car took a left turn while the nitro boost was activated.</p>
+          <div style="text-align: center;">
+            <img src="./images/success.png" alt="success" style="height: 300px;">
+            <p><em>Figure 7: Video frame showing a user's hand performing a gesture and corresponding car movement.</em></p>
+          </div>
+         <h5>Failure Cases: </h5>
+         <p>These are the two failures encountered before we calibrated the configuration parameter. In the first example, the camera could not detect the hand landmarks because of the cluttered background. In the second example, the system did not perform as expected, so the car crashed in the game.</p>
+          <div style="text-align: center;">
+            <img src="./images/failure-1.png" alt="failure-1" style="height: 300px;">
+            <p><em>Figure 8a: Video frame showing a user's hand performing a gesture but they are not mapped to hand landmarks.</em></p>
+
+            <img src="./images/failure-2.png" alt="failure-2" style="height: 300px;">
+            <p><em>Figure 8b: Video frame showing a user's hand performing a gesture but system couldn't respond in time..</em></p>
+          </div>
+         <center>
+            <h3>Conclusion</h3>
+         </center>
+         <p>
+           This report describes developing a gesture recognition system to control gameplay in a racing game using real-time hand landmark detection using the MediaPipe library. The project demonstrated the potential of computer vision to enhance human-computer interaction by replacing traditional input devices with intuitive hand gestures.
+           We can further enhance the robustness and versatility of our approach by:
+           <ul>
+             <li>Integrate advanced deep learning models for gesture classification, such as CNN-based approaches, to handle complex gestures and reduce false positives.</li>
+             <li>Use multi-modal inputs, such as combining depth data with video, to effectively handle cluttered or dynamic backgrounds.</li>
+             <li>Incorporate a broader set of gestures to allow more nuanced control, such as speed adjustments or directional control for more complex games.</li>
+           </ul>
+         </p>
+         <center>
+            <h3>References</h3>
+         </center>
+         <ul>
+            <li>Google AI. MediaPipe Hand Landmarker Documentation. Retrieved from <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker"> MediaPipe Hand Landmarker Documentation</a> </li>
+            <li>OpenCV. Open Source Computer Vision Library. <a href="https://opencv.org">OpenCV</a></li>
+            <li>Asphalt 8: Airborne. Game Description and Download. <a href="https://apps.apple.com/in/app/asphalt-8-airborne/id610391947">Apple Store</a></li>
+            <li>R. Poppe. (2010). A Survey on Vision-Based Gesture Recognition. <a href="https://link.springer.com/article/10.1007/s11042-009-9401-5">Springer Link</a></li>
+            <li>Google Developers Blog. (2020). MediaPipe: Cross-Platform Framework for Building Perception Pipelines. <a href="https://blog.google/products/google-ai/introducing-mediapipe/">Google Developers Blog. (2020)</a></li>
+         </ul>
+         <hr>
+         <footer class="text-center">
+            <p>© Vikrant Bhati, Kamal Sherawat</p>
+         </footer>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+   </body>
+</html>
