@@ -21,12 +21,12 @@ Here is an organized overview of the project files:
 
 ```plaintext
 Gesture-Recognition/
-├── 📜 play.py               **🚀 Main entry point of the application**
-├── 📜 controller.py         **🎮 Handles game control mappings for gestures**
-├── 📜 capture_video.py      **📹 Manages video capture and frame processing**
-├── 📜 hand_landmark.py      **✋ Handles hand landmark detection using MediaPipe**
-├── 📜 controller_enum.py    **🕹️ Defines key mappings for steering and acceleration**
-├── 📜 requirements.txt      **📦 Lists all dependencies required for the project**
+├── 📜 play.py               🚀 Main entry point of the application
+├── 📜 controller.py         🎮 Handles game control mappings for gestures
+├── 📜 capture_video.py      📹 Manages video capture and frame processing
+├── 📜 hand_landmark.py      ✋ Handles hand landmark detection using MediaPipe
+├── 📜 controller_enum.py    🕹️ Defines key mappings for steering and acceleration
+├── 📜 requirements.txt      📦 Lists all dependencies required for the project
 ```
 
 
