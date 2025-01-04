@@ -1,0 +1,3 @@
+mediapipe==0.10.0
+opencv-python==4.8.0.74
+pynput==1.7.6
