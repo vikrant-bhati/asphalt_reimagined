@@ -57,3 +57,7 @@ python play.py
 ```
 ## 📸 Live Demo
 [![Watch the Demo Video](./docs/images/game-teaser.png)](https://youtu.be/jf9etWVmbEA?si=i6ByldbLPhPqaSQD)
+
+## 🌐 More Details
+
+[![Gesture Recognition Website](https://img.shields.io/badge/Website-Live-brightgreen?style=for-the-badge&logo=google-chrome)](https://vikrant-bhati.github.io/asphalt_reimagined/)
