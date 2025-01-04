@@ -11,7 +11,7 @@ This project demonstrates the use of hand-based gesture controls to interact wit
   - Closed Left palm: Activates braking.
   - Tilted Right index finger: Controls steering (left or right).
 - **Platform Compatibility**: Works with any system supporting Python, OpenCV, and MediaPipe.
-- **Dynamic Background Handling**: Tested under various lighting and background conditions.
+- **Dynamic Background Handling**: Tested under various lighting and background conditions. 
 
 ---
 
